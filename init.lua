@@ -193,6 +193,9 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+vim.diagnostic.config { virtual_text = false }
+vim.keymap.set('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -232,7 +235,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  --'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -855,16 +858,40 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'ellisonleao/gruvbox.nvim',
+    -- 'ellisonleao/gruvbox.nvim',
+    -- 'EdenEast/nightfox.nvim',
+    -- 'tomasiser/vim-code-dark',
+    -- 'kaicataldo/material.vim',
+    -- 'yunlingz/equinusocio-material.vim',
+    -- 'ofirgall/ofirkai.nvim',
+    -- 'catppuccin/nvim',
+    -- e - ink theme
+    -- 'alexxGmZ/e-ink.nvim',
+    'bluz71/vim-moonfly-colors',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
+      vim.o.termguicolors = true
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'gruvbox'
+      -- vim.cmd.colorscheme 'gruvbox'
+      -- vim.cmd.colorscheme 'carbonfox' -- for nightfox
+      -- vim.cmd.colorscheme 'codedark'
+      -- vim.cmd.colorscheme 'material'
+      -- vim.g.material_theme_style = 'darker-community'
+      -- vim.cmd.colorscheme 'equinusocio_material'
+      -- vim.g.equinusocio_material_style = 'darker'
+      -- vim.cmd.colorscheme 'catppuccin-latte'
+      -- e - ink theme
+      -- vim.cmd.colorscheme 'e-ink'
+      -- vim.opt.background = 'light'
+      vim.cmd.colorscheme 'moonfly'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
+
+      -- neovide font
+      vim.o.guifont = 'JetBrains Mono:h12'
     end,
   },
 
