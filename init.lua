@@ -108,6 +108,15 @@ vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
+-- change default shell to powershell :term
+vim.opt.shell = 'powershell'
+vim.opt.shellcmdflag = '-command'
+vim.opt.shellquote = '"'
+vim.opt.shellxquote = ''
+
+-- no copying when deleting
+vim.keymap.set('n', 'd', '"_d', { noremap = true })
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
