@@ -474,7 +474,10 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'williamboman/mason.nvim', opts = {} },
+      {
+        'williamboman/mason.nvim',
+        opts = {},
+      },
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -697,10 +700,47 @@ require('lazy').setup({
 
   { -- Roslyn LSP for c#
     'seblyng/roslyn.nvim',
-    ft = 'cs',
+    ft = { 'cs', 'razor' },
     opts = {
       -- your configuration comes here; leave empty for default settings
     },
+    dependencies = {
+      {
+        -- By loading as a dependencies, we ensure that we are available to set
+        -- the handlers for roslyn
+        'tris203/rzls.nvim',
+        config = function()
+          ---@diagnostic disable-next-line: missing-fields
+          require('rzls').setup {
+            path = 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\rzls.exe',
+          }
+        end,
+      },
+    },
+    config = function()
+      require('roslyn').setup {
+        args = {
+          '--stdio',
+          '--logLevel=Information',
+          '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
+          '--razorSourceGenerator=' .. 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\Microsoft.CodeAnalysis.Razor.Compiler.dll',
+          '--razorDesignTimePath=' .. 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\Targets\\Microsoft.NET.Sdk.Razor.DesignTime.targets',
+        },
+        config = {
+          --[[ the rest of your roslyn config ]]
+          handlers = require 'rzls.roslyn_handlers',
+        },
+      }
+    end,
+    init = function()
+      -- we add the razor filetypes before the plugin loads
+      vim.filetype.add {
+        extension = {
+          razor = 'razor',
+          cshtml = 'razor',
+        },
+      }
+    end,
   },
 
   { -- Autoformat
