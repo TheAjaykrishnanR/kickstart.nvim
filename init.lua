@@ -114,9 +114,6 @@ vim.opt.shellcmdflag = '-command'
 vim.opt.shellquote = '"'
 vim.opt.shellxquote = ''
 
--- no copying when deleting
-vim.keymap.set('n', 'd', '"_d', { noremap = true })
-
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
@@ -169,8 +166,29 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+
+-- My Custom Keymaps
+
+-- no copying when deleting
+vim.keymap.set('n', 'd', '"_d', { noremap = true })
+
+-- insert mode goto first char
+vim.keymap.set('n', 'H', '^', { noremap = true })
+
+-- cut line
+vim.keymap.set('n', 'xx', 'yydd')
+
+-- move line up
+vim.keymap.set('n', '<C-k>', ':move .-2<CR>==', { noremap = true, silent = true })
+
+-- move line down
+vim.keymap.set('n', '<C-j>', ':move .+1<CR>==', { noremap = true, silent = true })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -199,8 +217,8 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+-- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.diagnostic.config { virtual_text = false }
 vim.keymap.set('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
@@ -1008,6 +1026,23 @@ require('lazy').setup({
     --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  },
+
+  {
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('nvim-tree').setup {}
+    end,
+  },
+
+  {
+    'OXY2DEV/markview.nvim',
+    lazy = false,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
