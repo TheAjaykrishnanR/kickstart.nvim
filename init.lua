@@ -190,6 +190,11 @@ vim.keymap.set('n', '<C-k>', ':move .-2<CR>==', { noremap = true, silent = true 
 -- move line down
 vim.keymap.set('n', '<C-j>', ':move .+1<CR>==', { noremap = true, silent = true })
 
+-- goto last jumped line in history: <Ctrl-O> remap to <gl>
+vim.keymap.set('n', 'gl', '<C-O>', { noremap = true, silent = true })
+
+-- End of custom keymaps
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
