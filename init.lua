@@ -194,6 +194,8 @@ vim.keymap.set('n', '<C-j>', ':move .+1<CR>==', { noremap = true, silent = true 
 vim.keymap.set('n', 'gl', '<C-O>', { noremap = true, silent = true })
 
 -- End of custom keymaps
+--
+vim.keymap.set('n', 't', '<cmd>ToggleTerm<CR>')
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
