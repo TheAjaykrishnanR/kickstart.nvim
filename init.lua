@@ -264,6 +264,9 @@ vim.opt.rtp:prepend(lazypath)
 --  To update plugins you can run
 --    :Lazy update
 --
+
+-- LSP config
+
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
@@ -498,10 +501,14 @@ require('lazy').setup({
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       {
-        'williamboman/mason.nvim',
+        'mason-org/mason.nvim',
+        version = '^1.0.0',
         opts = {},
       },
-      'williamboman/mason-lspconfig.nvim',
+      {
+        'mason-org/mason-lspconfig.nvim',
+        version = '^1.0.0',
+      },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -724,6 +731,8 @@ require('lazy').setup({
   { -- Roslyn LSP for c#
     'seblyng/roslyn.nvim',
     ft = { 'cs', 'razor' },
+    --@module 'roslyn.config'
+    --@type 'RoslynNvimConfig'
     opts = {
       -- your configuration comes here; leave empty for default settings
     },
@@ -735,26 +744,27 @@ require('lazy').setup({
         config = function()
           ---@diagnostic disable-next-line: missing-fields
           require('rzls').setup {
-            path = 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\rzls.exe',
+            path = 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\rzls\\rzls.exe',
           }
         end,
       },
     },
     config = function()
-      require('roslyn').setup {
-        args = {
+      vim.lsp.config('roslyn', {
+        handlers = require 'rzls.roslyn_handlers',
+        cmd = {
+          'dotnet',
+          'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\roslyn\\Microsoft.CodeAnalysis.LanguageServer.dll',
           '--stdio',
           '--logLevel=Information',
           '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
           '--razorSourceGenerator=' .. 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\Microsoft.CodeAnalysis.Razor.Compiler.dll',
           '--razorDesignTimePath=' .. 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\Targets\\Microsoft.NET.Sdk.Razor.DesignTime.targets',
         },
-        config = {
-          --[[ the rest of your roslyn config ]]
-          handlers = require 'rzls.roslyn_handlers',
-        },
-      }
+      })
+      vim.lsp.enable 'roslyn'
     end,
+
     init = function()
       -- we add the razor filetypes before the plugin loads
       vim.filetype.add {
@@ -939,7 +949,8 @@ require('lazy').setup({
     -- 'catppuccin/nvim',
     -- e - ink theme
     -- 'alexxGmZ/e-ink.nvim',
-    'bluz71/vim-moonfly-colors',
+    -- 'bluz71/vim-moonfly-colors',
+    'TheAjaykrishnanR/sublime_material_theme',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       vim.o.termguicolors = true
@@ -1007,6 +1018,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -1025,6 +1037,9 @@ require('lazy').setup({
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
+    dependencies = {
+      'OXY2DEV/markview.nvim',
+    },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
@@ -1032,7 +1047,6 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
-
   {
     'nvim-tree/nvim-tree.lua',
     version = '*',
@@ -1046,8 +1060,9 @@ require('lazy').setup({
   },
 
   {
-    'OXY2DEV/markview.nvim',
-    lazy = false,
+    'akinsho/toggleterm.nvim',
+    version = '*',
+    config = true,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
