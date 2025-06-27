@@ -195,7 +195,7 @@ vim.keymap.set('n', 'gl', '<C-O>', { noremap = true, silent = true })
 
 -- End of custom keymaps
 --
-vim.keymap.set('n', 't', '<cmd>ToggleTerm<CR>')
+vim.keymap.set('n', 't', '<cmd>ToggleTerm direction=vertical size=40<CR>')
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -1065,6 +1065,14 @@ require('lazy').setup({
     'akinsho/toggleterm.nvim',
     version = '*',
     config = true,
+  },
+
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = true,
+    -- use opts = {} for passing setup options
+    -- this is equivalent to setup({}) function
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
