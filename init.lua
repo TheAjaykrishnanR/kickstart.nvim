@@ -83,6 +83,7 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+vim.o.guicursor = ''
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -194,8 +195,12 @@ vim.keymap.set('n', '<C-j>', ':move .+1<CR>==', { noremap = true, silent = true 
 vim.keymap.set('n', 'gl', '<C-O>', { noremap = true, silent = true })
 
 -- End of custom keymaps
---
+
 vim.keymap.set('n', 't', '<cmd>ToggleTerm direction=vertical size=40<CR>')
+
+-- Start plugin keymaps
+-- nvim-tree
+vim.keymap.set('n', 'fi', '<cmd>NvimTreeToggle<CR>')
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -777,6 +782,144 @@ require('lazy').setup({
       }
     end,
   },
+  { -- C# Debugger
+    'mfussenegger/nvim-dap',
+    config = function()
+      local dap = require 'dap'
+
+      local netcoredbg_path = vim.fn.stdpath 'data' .. '/netcoredbg/netcoredbg.exe'
+
+      -- Configure adapters
+      dap.adapters.coreclr = {
+        type = 'executable',
+        command = netcoredbg_path,
+        args = { '--interpreter=vscode' },
+      }
+
+      dap.adapters.netcoredbg = {
+        type = 'executable',
+        command = netcoredbg_path,
+        args = { '--interpreter=vscode' },
+      }
+
+      -- Configure C# debugging
+      dap.configurations.cs = {
+        {
+          type = 'coreclr',
+          name = 'launch - netcoredbg',
+          request = 'launch',
+          program = function()
+            return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+          end,
+        },
+      }
+
+      -- keymaps
+      vim.keymap.set('n', '<leader>b', '<cmd>:DapToggleBreakpoint<CR>')
+    end,
+  },
+  { -- Debugger UI
+    'rcarriga/nvim-dap-ui',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'nvim-neotest/nvim-nio',
+    },
+    config = function()
+      local dap, dapui = require 'dap', require 'dapui'
+
+      -- Setup dap-ui with default configuration
+      dapui.setup {
+        icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+        mappings = {
+          -- Use a table to apply multiple mappings
+          expand = { '<CR>', '<2-LeftMouse>' },
+          open = 'o',
+          remove = 'd',
+          edit = 'e',
+          repl = 'r',
+          toggle = 't',
+        },
+        layouts = {
+          {
+            elements = {
+              -- Elements can be strings or table with id and size keys.
+              { id = 'scopes', size = 0.25 },
+              'breakpoints',
+              'stacks',
+              'watches',
+            },
+            size = 40, -- 40 columns
+            position = 'left',
+          },
+          {
+            elements = {
+              'repl',
+              'console',
+            },
+            size = 0.25, -- 25% of total lines
+            position = 'bottom',
+          },
+        },
+        controls = {
+          -- Requires Neovim nightly (or 0.8 when released)
+          -- Enabled by default for nightly builds
+          enabled = true,
+          -- Display controls in this element
+          element = 'repl',
+          icons = {
+            pause = '',
+            play = '',
+            step_into = '',
+            step_over = '',
+            step_out = '',
+            step_back = '',
+            run_last = '↻',
+            terminate = '□',
+          },
+        },
+        floating = {
+          max_height = nil, -- These can be integers or a float between 0 and 1.
+          max_width = nil, -- Floats will be treated as percentage of your screen.
+          border = 'single', -- Border style. Can be "single", "double" or "rounded"
+          mappings = {
+            close = { 'q', '<Esc>' },
+          },
+        },
+        windows = { indent = 1 },
+        render = {
+          max_type_length = nil, -- Can be integer or nil.
+          max_value_lines = 100, -- Can be integer or nil.
+        },
+      }
+
+      -- Auto-open/close UI when debugging starts/stops
+      dap.listeners.after.event_initialized['dapui_config'] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated['dapui_config'] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited['dapui_config'] = function()
+        dapui.close()
+      end
+
+      -- Optional: Add keybindings for manual control
+      vim.keymap.set('n', '<leader>du', function()
+        dapui.toggle()
+      end, { desc = 'Toggle DAP UI' })
+      vim.keymap.set('n', '<leader>dr', function()
+        dapui.open { reset = true }
+      end, { desc = 'Reset DAP UI' })
+      vim.keymap.set('n', '<leader>dc', function()
+        dapui.close()
+      end, { desc = 'Close DAP UI' })
+
+      -- Evaluate expressions
+      vim.keymap.set({ 'n', 'v' }, '<leader>de', function()
+        dapui.eval()
+      end, { desc = 'Evaluate expression' })
+    end,
+  },
 
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -953,6 +1096,9 @@ require('lazy').setup({
     -- 'alexxGmZ/e-ink.nvim',
     -- 'bluz71/vim-moonfly-colors',
     'TheAjaykrishnanR/sublime_material_theme',
+    -- 'Mofiqul/vscode.nvim',
+    -- 'xero/miasma.nvim',
+    -- 'sainnhe/gruvbox-material',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
       vim.o.termguicolors = true
@@ -971,6 +1117,9 @@ require('lazy').setup({
       -- vim.cmd.colorscheme 'e-ink'
       -- vim.opt.background = 'light'
       vim.cmd.colorscheme 'moonfly'
+      -- vim.cmd.colorscheme 'vscode'
+      -- vim.cmd.colorscheme 'miasma'
+      -- vim.cmd.colorscheme 'gruvbox-material'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
