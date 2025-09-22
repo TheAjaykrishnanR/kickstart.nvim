@@ -110,8 +110,8 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 
 -- change default shell to powershell :term
-vim.opt.shell = 'powershell'
-vim.opt.shellcmdflag = '-command'
+vim.opt.shell = 'pwsh'
+vim.opt.shellcmdflag = '-NoLogo -Command'
 vim.opt.shellquote = '"'
 vim.opt.shellxquote = ''
 
