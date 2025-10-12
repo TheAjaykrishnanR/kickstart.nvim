@@ -439,8 +439,8 @@ require('lazy').setup({
         -- },
         pickers = {
           buffers = {
-            initial_mode = "normal",
-          }
+            initial_mode = 'normal',
+          },
         },
         extensions = {
           ['ui-select'] = {
@@ -814,13 +814,16 @@ require('lazy').setup({
           name = 'launch - netcoredbg',
           request = 'launch',
           program = function()
-            return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+            -- return vim.fn.input('Path to dll', vim.fn.getcwd() .. '/bin/Debug/', 'file')
+            return build_dll_path()
           end,
         },
       }
 
       -- keymaps
       vim.keymap.set('n', '<leader>b', '<cmd>:DapToggleBreakpoint<CR>')
+      vim.keymap.set('n', '<leader>dd', '<cmd>:DapContinue<CR>')
+      vim.keymap.set('n', '<leader>ee', '<cmd>:DapTerminate<CR>')
     end,
   },
   { -- Debugger UI
@@ -1283,3 +1286,65 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- dotnet debugging
+-- Find the root directory of a .NET project by searching for .csproj files
+function find_project_root_by_csproj(start_path)
+  local Path = require 'plenary.path'
+  local path = Path:new(start_path)
+
+  while true do
+    local csproj_files = vim.fn.glob(path:absolute() .. '/*.csproj', false, true)
+    if #csproj_files > 0 then
+      return path:absolute()
+    end
+
+    local parent = path:parent()
+    if parent:absolute() == path:absolute() then
+      return nil
+    end
+
+    path = parent
+  end
+end
+
+-- Find the highest version of the netX.Y folder within a given path.
+function get_highest_net_folder(bin_debug_path)
+  local dirs = vim.fn.glob(bin_debug_path .. '/net*', false, true) -- Get all folders starting with 'net' in bin_debug_path
+
+  if dirs == 0 then
+    error('No netX.Y folders found in ' .. bin_debug_path)
+  end
+
+  table.sort(dirs, function(a, b) -- Sort the directories based on their version numbers
+    local ver_a = tonumber(a:match 'net(%d+)%.%d+')
+    local ver_b = tonumber(b:match 'net(%d+)%.%d+')
+    return ver_a > ver_b
+  end)
+
+  return dirs[1]
+end
+
+-- Build and return the full path to the .dll file for debugging.
+function build_dll_path()
+  local current_file = vim.api.nvim_buf_get_name(0)
+  local current_dir = vim.fn.fnamemodify(current_file, ':p:h')
+
+  local project_root = find_project_root_by_csproj(current_dir)
+  if not project_root then
+    error 'Could not find project root (no .csproj found)'
+  end
+
+  local csproj_files = vim.fn.glob(project_root .. '/*.csproj', false, true)
+  if #csproj_files == 0 then
+    error 'No .csproj file found in project root'
+  end
+
+  local project_name = vim.fn.fnamemodify(csproj_files[1], ':t:r')
+  local bin_debug_path = project_root .. '/bin/Debug'
+  local highest_net_folder = get_highest_net_folder(bin_debug_path)
+  local dll_path = highest_net_folder .. '/' .. project_name .. '.dll'
+
+  print('Launching: ' .. dll_path)
+  return dll_path
+end
