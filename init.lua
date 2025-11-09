@@ -761,7 +761,7 @@ require('lazy').setup({
         config = function()
           ---@diagnostic disable-next-line: missing-fields
           require('rzls').setup {
-            path = 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\rzls\\rzls.exe',
+            path = vim.fn.stdpath 'data' .. '/rzls/rzls.exe',
           }
         end,
       },
@@ -771,12 +771,12 @@ require('lazy').setup({
         handlers = require 'rzls.roslyn_handlers',
         cmd = {
           'dotnet',
-          'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\roslyn\\Microsoft.CodeAnalysis.LanguageServer.dll',
+          vim.fn.stdpath 'data' .. '/roslyn/Microsoft.CodeAnalysis.LanguageServer.dll',
           '--stdio',
           '--logLevel=Information',
           '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
-          '--razorSourceGenerator=' .. 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\Microsoft.CodeAnalysis.Razor.Compiler.dll',
-          '--razorDesignTimePath=' .. 'C:\\Users\\Jayakuttan\\AppData\\Local\\nvim-data\\razor-lsp\\Targets\\Microsoft.NET.Sdk.Razor.DesignTime.targets',
+          '--razorSourceGenerator=' .. vim.fn.stdpath 'data' .. '/razor-lsp/Microsoft.CodeAnalysis.Razor.Compiler.dll',
+          '--razorDesignTimePath=' .. vim.fn.stdpath 'data' .. '/razor-lsp/Targets/Microsoft.NET.Sdk.Razor.DesignTime.targets',
         },
       })
       vim.lsp.enable 'roslyn'
