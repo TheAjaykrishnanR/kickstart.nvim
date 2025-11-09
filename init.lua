@@ -167,6 +167,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- diable text wrapping
+vim.opt.wrap = false
+
 -- nvim-tree
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -687,7 +690,9 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
-        --
+
+        -- html lsp
+        html = {},
 
         lua_ls = {
           -- cmd = { ... },
@@ -821,9 +826,11 @@ require('lazy').setup({
       }
 
       -- keymaps
-      vim.keymap.set('n', '<leader>b', '<cmd>:DapToggleBreakpoint<CR>')
-      vim.keymap.set('n', '<leader>dd', '<cmd>:DapContinue<CR>')
-      vim.keymap.set('n', '<leader>ee', '<cmd>:DapTerminate<CR>')
+      vim.keymap.set('n', '<leader>db', '<cmd>:DapToggleBreakpoint<CR>')
+      vim.keymap.set('n', '<leader>dc', '<cmd>:DapContinue<CR>')
+      vim.keymap.set('n', '<leader>do', '<cmd>:DapStepOver<CR>')
+      vim.keymap.set('n', '<leader>di', '<cmd>:DapStepInto<CR>')
+      vim.keymap.set('n', '<leader>de', '<cmd>:DapTerminate<CR>')
     end,
   },
   { -- Debugger UI
@@ -912,21 +919,26 @@ require('lazy').setup({
       end
 
       -- Optional: Add keybindings for manual control
-      vim.keymap.set('n', '<leader>du', function()
-        dapui.toggle()
-      end, { desc = 'Toggle DAP UI' })
-      vim.keymap.set('n', '<leader>dr', function()
-        dapui.open { reset = true }
-      end, { desc = 'Reset DAP UI' })
-      vim.keymap.set('n', '<leader>dc', function()
-        dapui.close()
-      end, { desc = 'Close DAP UI' })
+      -- vim.keymap.set('n', '<leader>du', function()
+      -- dapui.toggle()
+      -- end, { desc = 'Toggle DAP UI' })
+      -- vim.keymap.set('n', '<leader>dr', function()
+      -- dapui.open { reset = true }
+      -- end, { desc = 'Reset DAP UI' })
+      -- vim.keymap.set('n', '<leader>dc', function()
+      -- dapui.close()
+      -- end, { desc = 'Close DAP UI' })
 
       -- Evaluate expressions
-      vim.keymap.set({ 'n', 'v' }, '<leader>de', function()
-        dapui.eval()
-      end, { desc = 'Evaluate expression' })
+      -- vim.keymap.set({ 'n', 'v' }, '<leader>de', function()
+      -- dapui.eval()
+      -- end, { desc = 'Evaluate expression' })
     end,
+  },
+  { -- Typescript lsp
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
   },
 
   { -- Autoformat
