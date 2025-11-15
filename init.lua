@@ -168,7 +168,7 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- diable text wrapping
-vim.opt.wrap = false
+-- vim.opt.wrap = false
 
 -- nvim-tree
 vim.g.loaded_netrw = 1
@@ -940,7 +940,13 @@ require('lazy').setup({
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
     opts = {},
   },
-
+  { -- Powershell LSP
+    'TheLeoP/powershell.nvim',
+    ---@type powershell.user_config
+    opts = {
+      bundle_path = vim.fn.stdpath 'data' .. '/powershell',
+    },
+  },
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -1209,7 +1215,7 @@ require('lazy').setup({
       indent = { enable = true, disable = { 'ruby' } },
     },
     dependencies = {
-      'OXY2DEV/markview.nvim',
+      -- 'OXY2DEV/markview.nvim',
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
