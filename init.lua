@@ -947,6 +947,12 @@ require('lazy').setup({
       bundle_path = vim.fn.stdpath 'data' .. '/powershell',
     },
   },
+  { -- C# Script runner using cs-script
+    'TheAjaykrishnanR/nvim-csharp-runner',
+    config = function()
+      require 'csharp_runner'
+    end,
+  },
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
