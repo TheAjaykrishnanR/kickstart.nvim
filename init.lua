@@ -710,9 +710,9 @@ require('lazy').setup({
             },
           },
         },
-		
-	-- dlang lsp
-	serve_d = {},
+
+        -- dlang lsp
+        -- serve_d = {},
       }
 
       -- Ensure the servers and tools above are installed
