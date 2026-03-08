@@ -83,7 +83,9 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
-vim.o.guicursor = ''
+
+-- uncomment if you want same cursor for both insert and normal modes
+-- vim.o.guicursor = ''
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -708,6 +710,9 @@ require('lazy').setup({
             },
           },
         },
+		
+	-- dlang lsp
+	serve_d = {},
       }
 
       -- Ensure the servers and tools above are installed
