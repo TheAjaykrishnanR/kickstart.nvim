@@ -742,8 +742,8 @@ require('lazy').setup({
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            -- require('lspconfig')[server_name].setup(server)
-            vim.lsp.config[server_name] = server
+            require('lspconfig')[server_name].setup(server)
+            -- vim.lsp.config[server_name] = server
           end,
         },
       }
@@ -1263,6 +1263,35 @@ require('lazy').setup({
 
   {
     'junegunn/vim-easy-align',
+  },
+  { -- Tsoding like compile commands
+    'ej-shafran/compile-mode.nvim',
+    version = '^5.0.0',
+    -- you can just use the latest version:
+    -- branch = "latest",
+    -- or the most up-to-date updates:
+    -- branch = "nightly",
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      -- if you want to enable coloring of ANSI escape codes in
+      -- compilation output, add:
+      -- { "m00qek/baleia.nvim", tag = "v1.3.0" },
+    },
+    config = function()
+      ---@type CompileModeOpts
+      vim.g.compile_mode = {
+        -- if you use something like `nvim-cmp` or `blink.cmp` for completion,
+        -- set this to fix tab completion in command mode:
+        -- input_word_completion = true,
+
+        -- to add ANSI escape code support, add:
+        -- baleia_setup = true,
+
+        -- to make `:Compile` replace special characters (e.g. `%`) in
+        -- the command (and behave more like `:!`), add:
+        -- bang_expansion = true,
+      }
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
