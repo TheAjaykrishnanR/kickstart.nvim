@@ -74,3 +74,29 @@ require("sublime-material").setup({
   style = "dark",
 })
 vim.cmd.colorscheme("sublime-material")
+
+-- autocomplete
+-- Configure native popup menu behavior
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
+
+-- Enable omnifunc automatically when an LSP attaches to a buffer
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    vim.bo[args.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+  end,
+})
+
+-- Auto-trigger the completion menu while typing letters or triggers (e.g., '.', ':')
+vim.api.nvim_create_autocmd("InsertCharPre", {
+  callback = function()
+    local char = vim.v.char
+    -- Trigger on alphanumeric chars, underscores, or common dot notation
+    if char:match("[%w_%.%:%->]") and vim.fn.pumvisible() == 0 and vim.bo.omnifunc ~= "" then
+      vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true),
+        "n",
+        true
+      )
+    end
+  end,
+})
