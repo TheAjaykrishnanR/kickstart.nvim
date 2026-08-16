@@ -28,8 +28,8 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 vim.opt.scrolloff = 10
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
 vim.keymap.set('n', 'd', '"_d', { noremap = true })
 vim.keymap.set('n', 'H', '^', { noremap = true })
 vim.keymap.set('n', 'xx', 'yydd')
@@ -98,5 +98,12 @@ vim.api.nvim_create_autocmd("InsertCharPre", {
         true
       )
     end
+  end,
+})
+-- gd to lsp definition
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(event)
+    local opts = { buffer = event.buf }
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   end,
 })
