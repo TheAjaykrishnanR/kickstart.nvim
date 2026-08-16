@@ -10,7 +10,7 @@ vim.opt.shellcmdflag = '-NoLogo -Command'
 vim.opt.shellquote = '"'
 vim.opt.shellxquote = ''
 vim.opt.mouse = 'a'
-vim.opt.showmode = false
+vim.opt.showmode = true
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
 end)
@@ -56,6 +56,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.pack.add{
   { src = 'https://github.com/neovim/nvim-lspconfig' },
 }
+-- c#
 vim.lsp.enable("roslyn_ls")
 vim.lsp.config("roslyn_ls", {
 	filetypes = {"cs", "razor"},
@@ -107,3 +108,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   end,
 })
+
+-- python
+vim.lsp.enable("basedpyright")
