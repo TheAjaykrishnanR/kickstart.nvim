@@ -57,6 +57,8 @@ vim.pack.add{
   { src = 'https://github.com/neovim/nvim-lspconfig' },
 }
 -- c#
+-- https://www.nuget.org/packages/roslyn-language-server.win-x64/
+-- requires roslyn-language-server.exe to be present in PATH
 vim.lsp.enable("roslyn_ls")
 vim.lsp.config("roslyn_ls", {
 	filetypes = {"cs", "razor"},
@@ -78,7 +80,7 @@ vim.cmd.colorscheme("sublime-material")
 
 -- autocomplete
 -- Configure native popup menu behavior
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.completeopt = { "menu", "menuone", "noinsert" }
 
 -- Enable omnifunc automatically when an LSP attaches to a buffer
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -108,6 +110,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
   end,
 })
+-- Accept completion on Enter if popup menu is visible, otherwise insert a new line
+vim.keymap.set('i', '<CR>', function()
+  return vim.fn.pumvisible() ~= 0 and '<C-y>' or '<CR>'
+end, { expr = true, noremap = true })
 
 -- python
 vim.lsp.enable("basedpyright")
+
+-- dlang
+vim.lsp.enable("serve_d")
