@@ -70,13 +70,30 @@ vim.lsp.config("roslyn_ls", {
 	}
 })
 -- theme
+-- sublime material theme
+-- vim.pack.add {
+-- 	{ src = 'https://github.com/TheAjaykrishnanR/sublime-material-theme.nvim' }
+-- }
+-- require("sublime-material").setup({
+--   style = "dark",
+-- })
+-- vim.cmd.colorscheme("sublime-material")
+
+-- monochrome theme (monochrome, monochrome-light)
+-- vim.pack.add {
+-- 	{ src = 'https://git.merveilles.town/jbauer/vim-monochrome' }
+-- }
+-- vim.cmd.colorscheme("monochrome-light")
+
+-- atom-dark
+-- vim.pack.add {
+-- 	{ src = 'https://github.com/gosukiwi/vim-atom-dark' }
+-- }
+-- vim.cmd.colorscheme("atom-dark")
 vim.pack.add {
-	{ src = 'https://github.com/TheAjaykrishnanR/sublime-material-theme.nvim' }
+	{ src = 'https://github.com/morhetz/gruvbox' }
 }
-require("sublime-material").setup({
-  style = "dark",
-})
-vim.cmd.colorscheme("sublime-material")
+vim.cmd.colorscheme("gruvbox")
 
 -- autocomplete
 -- Configure native popup menu behavior
